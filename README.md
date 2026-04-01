@@ -1,5 +1,7 @@
 # Image Viewer
 
+<img src="assets/app.png" width="720" alt="App screenshot">
+
 A local desktop image viewer built with PyQt6. Designed for inspecting sequences of same-sized images or PDF pages side-by-side at a consistent zoom level.
 
 ## Features
