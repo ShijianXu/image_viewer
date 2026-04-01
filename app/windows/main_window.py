@@ -158,6 +158,22 @@ class ImageViewer(QMainWindow):
             self._idx -= 1
             self._show()
 
+    def delete_current(self) -> None:
+        if not self._pixmaps:
+            return
+        del self._pixmaps[self._idx]
+        del self._paths[self._idx]
+        if not self._pixmaps:
+            self._view._scene.clear()
+            self._view._item = None
+            self._sidebar.clear()
+            self._lbl_file.setText("  Open images to get started")
+            self._lbl_nav.setText("")
+            return
+        self._idx = min(self._idx, len(self._pixmaps) - 1)
+        self._sidebar.populate(self._pixmaps, self._paths)
+        self._show()
+
     def _on_sidebar_select(self, row: int) -> None:
         if 0 <= row < len(self._pixmaps) and row != self._idx:
             self._idx = row
@@ -188,8 +204,9 @@ class ImageViewer(QMainWindow):
 
     def keyPressEvent(self, event) -> None:
         k = event.key()
-        if   k == Qt.Key.Key_Up:                          self.prev_image()
-        elif k == Qt.Key.Key_Down:                        self.next_image()
-        elif k in (Qt.Key.Key_Plus, Qt.Key.Key_Equal):    self.zoom_in()
-        elif k == Qt.Key.Key_Minus:                       self.zoom_out()
-        else:                                             super().keyPressEvent(event)
+        if   k == Qt.Key.Key_Up:                                    self.prev_image()
+        elif k == Qt.Key.Key_Down:                                  self.next_image()
+        elif k in (Qt.Key.Key_Plus, Qt.Key.Key_Equal):              self.zoom_in()
+        elif k == Qt.Key.Key_Minus:                                 self.zoom_out()
+        elif k in (Qt.Key.Key_Delete, Qt.Key.Key_Backspace):        self.delete_current()
+        else:                                                        super().keyPressEvent(event)
